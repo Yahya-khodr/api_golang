@@ -1,26 +1,18 @@
 package db
+
 import (
 	"database/sql"
-	"log"
+
 	_ "github.com/go-sql-driver/mysql"
 )
 
-
-
-func GetCon() (db *sql.DB) {
+func GetCon() (*sql.DB, error) {
 
 	dbDriver := "mysql"
 	dbUser := "root"
 	dbPass := ""
-	dbName := "golang"
+	dbName := "fbmockupdb"
 
-	db, err := sql.Open(dbDriver, dbUser+":"+dbPass+"@/"+dbName)
-
-	if err != nil {
-		log.Println("Connection Failed ")
-	} else {
-		log.Println("Connection Established")
-	}
-	return db
+	return sql.Open(dbDriver, dbUser+":"+dbPass+"@/"+dbName)
 
 }
