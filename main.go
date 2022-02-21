@@ -73,6 +73,20 @@ func initRoutes(router *mux.Router) {
 
 		}
 	}).Methods(http.MethodPost)
+	router.HandleFunc("/status", func(w http.ResponseWriter, r *http.Request) {
+		var status entity.Status
+		err := json.NewDecoder(r.Body).Decode(&status)
+		if err != nil {
+			respondWithError(err, w)
+		} else {
+			err := controllers.CreateStatus(status)
+			if err != nil {
+				respondWithError(err, w)
+			} else {
+				respondWithSuccess(true, w)
+			}
+		}
+	}).Methods(http.MethodPost)
 }
 
 func stringToInt64(s string) (int64, error) {

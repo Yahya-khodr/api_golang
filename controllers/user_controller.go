@@ -27,5 +27,4 @@ func CreateUser(user entity.User) error {
 	_, err = con.Exec("INSERT INTO users(first_name,last_name,email,password) VALUES (?,?,?,?)",
 		user.FirstName, user.LastName, user.Email, user.Password)
 	return err
-
 }
