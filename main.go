@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"facebook_golang/controllers"
 	"facebook_golang/db"
+	"facebook_golang/entity"
 	"log"
 	"net/http"
 	"strconv"
@@ -18,7 +19,7 @@ func main() {
 	if err != nil {
 		log.Printf("Error with database " + err.Error())
 		return
-	}else {
+	} else {
 		err = db.Ping()
 		if err != nil {
 			log.Printf("Error with connection to db" + err.Error())
@@ -57,14 +58,29 @@ func initRoutes(router *mux.Router) {
 			respondWithSuccess(user, w)
 		}
 	}).Methods(http.MethodGet)
+	router.HandleFunc("/signup", func(w http.ResponseWriter, r *http.Request) {
+		var user entity.User
+		err := json.NewDecoder(r.Body).Decode(&user)
+		if err != nil {
+			respondWithError(err, w)
+		} else {
+			err := controllers.CreateUser(user)
+			if err != nil {
+				respondWithError(err, w)
+			} else {
+				respondWithSuccess(true, w)
+			}
+
+		}
+	}).Methods(http.MethodPost)
 }
 
 func stringToInt64(s string) (int64, error) {
-	numero, err := strconv.ParseInt(s, 0, 64)
+	number, err := strconv.ParseInt(s, 0, 64)
 	if err != nil {
 		return 0, err
 	}
-	return numero, err
+	return number, err
 }
 
 func respondWithError(err error, w http.ResponseWriter) {
